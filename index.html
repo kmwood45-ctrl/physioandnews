@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CF & Physio Research Hub</title>
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="hdr">
+  <div class="hdr-top">
+    <div>
+      <div class="logo">CF &amp; Physio <em>Research Hub</em></div>
+      <div class="logo-sub">Evidence-based · AI-summarised · Daily digest</div>
+    </div>
+    <div class="hdr-right">
+      <div class="hdr-date" id="hdr-date"></div>
+      <button class="sub-btn" onclick="goTab('email')">Subscribe to Daily Digest</button>
+    </div>
+  </div>
+  <div class="nav-row" id="nav-row">
+    <button class="tab on"  onclick="goTab('cf')">Cystic Fibrosis</button>
+    <button class="tab"     onclick="goTab('trikafta')">Trikafta/CFTR</button>
+    <button class="tab"     onclick="goTab('airway')">Airway Clearance</button>
+    <button class="tab"     onclick="goTab('pt')">Physiotherapy</button>
+    <button class="tab"     onclick="goTab('msk')">MSK &amp; Rehab</button>
+    <button class="tab"     onclick="goTab('pain')">Pain &amp; CRPS</button>
+    <button class="tab"     onclick="goTab('auto')">Autonomic</button>
+    <button class="tab news-tab" onclick="goTab('news')">📰 Daily News</button>
+    <button class="tab"     onclick="goTab('games')">🎮 Games</button>
+    <button class="tab"     onclick="goTab('email')">📧 Daily Digest</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <!-- CF -->
+  <div id="sec-cf" class="sec on">
+    <div class="sec-title">Cystic Fibrosis Research</div>
+    <div class="sec-sub">High-impact, most-cited research — Canadian, Australian, American &amp; global sources</div>
+    <div class="chips">
+      <div class="chip on" onclick="filterChip(this,'cf','all')">All regions</div>
+      <div class="chip"    onclick="filterChip(this,'cf','ca')">🍁 Canadian</div>
+      <div class="chip"    onclick="filterChip(this,'cf','au')">🦘 Australian</div>
+      <div class="chip"    onclick="filterChip(this,'cf','us')">🇺🇸 American</div>
+      <div class="chip"    onclick="filterChip(this,'cf','ww')">🌐 Worldwide</div>
+    </div>
+    <div class="art-grid" id="grid-cf"></div>
+  </div>
+
+  <!-- TRIKAFTA -->
+  <div id="sec-trikafta" class="sec">
+    <div class="sec-title">Trikafta &amp; CFTR Modulators</div>
+    <div class="sec-sub">Landmark trials, long-term outcomes, and real-world evidence for CFTR modulator therapy</div>
+    <div class="art-grid" id="grid-trikafta"></div>
+  </div>
+
+  <!-- AIRWAY -->
+  <div id="sec-airway" class="sec">
+    <div class="sec-title">Airway Clearance Science</div>
+    <div class="sec-sub">PEP devices, airway clearance physiology, techniques, and comparative evidence</div>
+    <div class="chips">
+      <div class="chip on" onclick="filterChip(this,'airway','all')">All</div>
+      <div class="chip"    onclick="filterChip(this,'airway','pep')">PEP Devices</div>
+      <div class="chip"    onclick="filterChip(this,'airway','physio')">Physiology</div>
+      <div class="chip"    onclick="filterChip(this,'airway','tech')">Techniques</div>
+    </div>
+    <div class="art-grid" id="grid-airway"></div>
+  </div>
+
+  <!-- PT -->
+  <div id="sec-pt" class="sec">
+    <div class="sec-title">Physiotherapy Best Practices</div>
+    <div class="sec-sub">Evidence-based guidelines for airway clearance, exercise, and respiratory physiotherapy</div>
+    <div class="art-grid" id="grid-pt"></div>
+  </div>
+
+  <!-- MSK -->
+  <div id="sec-msk" class="sec">
+    <div class="sec-title">MSK &amp; Rehabilitation</div>
+    <div class="sec-sub">Return-to-sport protocols, evidence-based modalities, and best-practice rehabilitation</div>
+    <div class="chips" id="msk-chips">
+      <div class="chip on" onclick="mskFilter(this,'all')">All</div>
+      <div class="chip"    onclick="mskFilter(this,'rts')">Return to Sport</div>
+      <div class="chip"    onclick="mskFilter(this,'modalities')">Modalities</div>
+      <div class="chip"    onclick="mskFilter(this,'protocols')">Rehab Protocols</div>
+      <div class="chip"    onclick="mskFilter(this,'research')">Research</div>
+    </div>
+    <div id="msk-rts" class="msk-panel">
+      <div class="sec-title" style="font-size:17px;margin-bottom:10px;">Return-to-Sport Protocols</div>
+      <div class="protocol-grid" id="rts-grid"></div>
+    </div>
+    <div id="msk-modalities-panel" class="msk-panel" style="display:none;">
+      <div class="sec-title" style="font-size:17px;margin-bottom:10px;">Evidence-Based Modalities</div>
+      <div style="font-size:11px;color:var(--muted);margin-bottom:12px;">Evidence level: A = Strong RCT · B = Good evidence · C = Limited · D = Expert opinion</div>
+      <div class="mod-grid" id="mod-grid"></div>
+    </div>
+    <div id="msk-protocols-panel" class="msk-panel" style="display:none;">
+      <div class="sec-title" style="font-size:17px;margin-bottom:10px;">Condition-Specific Rehab Protocols</div>
+      <div class="protocol-grid" id="cond-grid"></div>
+    </div>
+    <div id="msk-research-panel" class="msk-panel" style="display:none;">
+      <div class="art-grid" id="grid-msk"></div>
+    </div>
+  </div>
+
+  <!-- PAIN -->
+  <div id="sec-pain" class="sec">
+    <div class="sec-title">Chronic Pain &amp; CRPS</div>
+    <div class="sec-sub">Complex regional pain syndrome, chronic regional pain, and multimodal rehabilitation</div>
+    <div class="art-grid" id="grid-pain"></div>
+  </div>
+
+  <!-- AUTO -->
+  <div id="sec-auto" class="sec">
+    <div class="sec-title">Autonomic Dysreflexia</div>
+    <div class="sec-sub">Pathophysiology, clinical management, and physiotherapy considerations</div>
+    <div class="art-grid" id="grid-auto"></div>
+  </div>
+
+  <!-- NEWS -->
+  <div id="sec-news" class="sec">
+    <div class="news-masthead">
+      <div class="news-masthead-title">Daily News Briefing</div>
+      <button class="news-refresh" onclick="loadNews()">Refresh</button>
+    </div>
+    <div class="news-sources" id="news-sources">
+      <div class="src-chip on" onclick="filterNews(this,'all')">All Sources</div>
+      <div class="src-chip"    onclick="filterNews(this,'NYT')">New York Times</div>
+      <div class="src-chip"    onclick="filterNews(this,'CBC')">CBC</div>
+      <div class="src-chip"    onclick="filterNews(this,'BBC')">BBC</div>
+      <div class="src-chip"    onclick="filterNews(this,'Economist')">The Economist</div>
+      <div class="src-chip"    onclick="filterNews(this,'Toronto')">Toronto</div>
+      <div class="src-chip"    onclick="filterNews(this,'Health')">Health &amp; Science</div>
+    </div>
+    <div id="news-container"><div class="loading-news">Click "Refresh" to load today's news briefing…</div></div>
+  </div>
+
+  <!-- GAMES -->
+  <div id="sec-games" class="sec">
+    <div class="sec-title">Daily Brain Games</div>
+    <div class="sec-sub">New puzzles every day</div>
+    <div class="games-grid">
+
+      <div class="game-card">
+        <div class="game-hdr"><div class="game-hdr-title">Sudoku</div><div class="diff-badge d-hard">Hard</div></div>
+        <div class="sudoku-wrap">
+          <div class="sdk-grid" id="sdk-grid"></div>
+          <div class="numpad" id="numpad"></div>
+          <div class="g-actions">
+            <button class="g-btn" onclick="sdkClear()">Clear</button>
+            <button class="g-btn pri" onclick="sdkCheck()">Check</button>
+            <button class="g-btn" onclick="sdkHint()">Hint</button>
+          </div>
+          <div class="g-msg" id="sdk-msg"></div>
+        </div>
+      </div>
+
+      <div class="game-card">
+        <div class="game-hdr"><div class="game-hdr-title">Wordle</div><div class="diff-badge d-daily">Daily Word</div></div>
+        <div class="wordle-wrap">
+          <div class="wl-msg" id="wl-msg"></div>
+          <div class="wl-board" id="wl-board"></div>
+          <div class="wl-kb" id="wl-kb"></div>
+        </div>
+      </div>
+
+      <div class="game-card" style="grid-column:1/-1;">
+        <div class="game-hdr"><div class="game-hdr-title">Crossword</div><div class="diff-badge d-med">Medium</div></div>
+        <div class="cw-wrap">
+          <div style="display:flex;gap:20px;flex-wrap:wrap;">
+            <div>
+              <div class="cw-grid-el" id="cw-grid" style="grid-template-columns:repeat(9,1fr);width:252px;"></div>
+              <div class="g-actions" style="margin-top:8px;">
+                <button class="g-btn" onclick="cwCheck()">Check</button>
+                <button class="g-btn pri" onclick="cwReveal()">Reveal</button>
+              </div>
+              <div class="g-msg" id="cw-msg"></div>
+            </div>
+            <div class="clues-panel" style="flex:1;min-width:180px;">
+              <div class="clues-col"><h4>Across</h4><div id="clues-ac"></div></div>
+              <div class="clues-col"><h4>Down</h4><div id="clues-dn"></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- EMAIL -->
+  <div id="sec-email" class="sec">
+    <div class="sec-title" style="margin-bottom:14px;">Daily Research &amp; Puzzle Digest</div>
+    <div class="email-card">
+      <h3>Subscribe to your morning briefing</h3>
+      <p>Receive a curated daily email with new research, AI summaries, top news from CBC, NYT, BBC &amp; Toronto, plus your daily Sudoku, Wordle, and Crossword.</p>
+      <div class="fgroup"><label>Email address</label><input type="email" id="sub-em" placeholder="you@example.com"/></div>
+      <div class="fgroup"><label>Delivery time (Toronto)</label>
+        <select><option>6:00 AM</option><option>7:00 AM</option><option selected>8:00 AM</option><option>9:00 AM</option><option>12:00 PM</option></select>
+      </div>
+      <div class="fgroup">
+        <label>Topics to include:</label>
+        <label class="cb-row"><input type="checkbox" checked> Cystic Fibrosis research</label>
+        <label class="cb-row"><input type="checkbox" checked> Trikafta &amp; CFTR modulators</label>
+        <label class="cb-row"><input type="checkbox" checked> Airway clearance &amp; PEP</label>
+        <label class="cb-row"><input type="checkbox" checked> Physiotherapy best practices</label>
+        <label class="cb-row"><input type="checkbox" checked> MSK, return-to-sport &amp; rehab</label>
+        <label class="cb-row"><input type="checkbox"> Chronic pain &amp; CRPS</label>
+        <label class="cb-row"><input type="checkbox"> Autonomic dysreflexia</label>
+        <label class="cb-row"><input type="checkbox" checked> CBC / Toronto news</label>
+        <label class="cb-row"><input type="checkbox" checked> BBC / NYT / World news</label>
+        <label class="cb-row"><input type="checkbox" checked> Daily Sudoku (hard)</label>
+        <label class="cb-row"><input type="checkbox" checked> Daily Wordle</label>
+        <label class="cb-row"><input type="checkbox" checked> Daily Crossword (medium)</label>
+      </div>
+      <button class="submit-btn" onclick="doSubscribe()">Subscribe — free</button>
+      <div class="success-msg" id="sub-ok">You're subscribed! Check your inbox for a confirmation email.</div>
+    </div>
+
+    <div class="backend-card" style="margin-top:20px;">
+      <h4>Backend Setup (see README.md for full deploy guide)</h4>
+      <span class="comment">// 1. Copy .env.example to .env and fill in your API keys</span><br>
+      <span class="comment">// 2. Run: npm install &amp;&amp; node server/index.js</span><br>
+      <span class="comment">// 3. Deploy to Railway or Render (free tier available)</span><br><br>
+      <span class="keyword">Required keys:</span><br>
+      &nbsp;&nbsp;<span class="string">ANTHROPIC_API_KEY</span> — from console.anthropic.com<br>
+      &nbsp;&nbsp;<span class="string">SENDGRID_API_KEY</span>  — from sendgrid.com (free: 100 emails/day)<br>
+      &nbsp;&nbsp;<span class="string">NEWS_API_KEY</span>      — from newsapi.org (free tier)<br>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
