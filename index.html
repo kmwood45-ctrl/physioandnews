@@ -9,15 +9,15 @@
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-
 <div class="hdr">
   <div class="hdr-top">
     <div>
       <div class="logo">CF &amp; Physio <em>Research Hub</em></div>
-      <div class="logo-sub">Evidence-based · AI-summarised · Daily digest · Toronto, Canada</div>
+      <div class="logo-sub">Evidence-based · AI-summarised · Updated Daily · Toronto, Canada</div>
     </div>
     <div class="hdr-right">
       <div class="hdr-date" id="hdr-date"></div>
+      <div class="hdr-update" id="hdr-update">Last updated: loading…</div>
       <button class="sub-btn" onclick="goTab('email')">📧 Daily Digest</button>
     </div>
   </div>
@@ -25,6 +25,7 @@
     <button class="tab on"       onclick="goTab('cf')">Cystic Fibrosis</button>
     <button class="tab"          onclick="goTab('trikafta')">Trikafta/CFTR</button>
     <button class="tab"          onclick="goTab('airway')">Airway Clearance</button>
+    <button class="tab"          onclick="goTab('nacfc')">🎓 NACFC</button>
     <button class="tab"          onclick="goTab('pt')">Physiotherapy</button>
     <button class="tab"          onclick="goTab('msk')">MSK &amp; Rehab</button>
     <button class="tab"          onclick="goTab('pain')">Pain &amp; CRPS</button>
@@ -40,44 +41,66 @@
 <!-- CF -->
 <div id="sec-cf" class="sec on">
   <div class="sec-hdr">
-    <div><div class="sec-title">Cystic Fibrosis Research</div><div class="sec-sub">High-impact, peer-reviewed — sorted by citation count · Canadian 🍁 Australian 🦘 American 🇺🇸 Global 🌐</div></div>
-    <button class="archive-btn" onclick="toggleArchive('cf')">📁 Archive</button>
+    <div>
+      <div class="sec-title">Cystic Fibrosis Research</div>
+      <div class="sec-sub">High-impact peer-reviewed research · Sorted by citation count · Updated daily from PubMed</div>
+    </div>
+    <div class="hdr-btns">
+      <button class="refresh-btn" onclick="loadDailyArticles('cf')">⟳ Load New</button>
+      <button class="archive-btn" onclick="toggleArchive('cf')">📁 Archive</button>
+    </div>
   </div>
+  <div class="teaching-banner" id="teach-cf"></div>
   <div class="chips">
     <div class="chip on" onclick="filterChip(this,'cf','all')">All</div>
     <div class="chip" onclick="filterChip(this,'cf','ca')">🍁 Canadian</div>
     <div class="chip" onclick="filterChip(this,'cf','au')">🦘 Australian</div>
     <div class="chip" onclick="filterChip(this,'cf','us')">🇺🇸 American</div>
     <div class="chip" onclick="filterChip(this,'cf','ww')">🌐 Worldwide</div>
-    <div class="chip" onclick="filterChip(this,'cf','new')">🆕 Recent</div>
+    <div class="chip" onclick="filterChip(this,'cf','new')">🆕 New Today</div>
   </div>
   <div class="archive-panel" id="archive-cf" style="display:none;"></div>
   <div class="art-grid" id="grid-cf"></div>
+  <div class="daily-articles" id="daily-cf"></div>
 </div>
 
 <!-- TRIKAFTA -->
 <div id="sec-trikafta" class="sec">
   <div class="sec-hdr">
-    <div><div class="sec-title">Trikafta &amp; CFTR Modulators</div><div class="sec-sub">Landmark RCTs, long-term outcomes, real-world evidence, and emerging modulator science</div></div>
-    <button class="archive-btn" onclick="toggleArchive('trikafta')">📁 Archive</button>
+    <div>
+      <div class="sec-title">Trikafta &amp; CFTR Modulators</div>
+      <div class="sec-sub">Landmark RCTs, long-term outcomes, real-world evidence · Updated daily</div>
+    </div>
+    <div class="hdr-btns">
+      <button class="refresh-btn" onclick="loadDailyArticles('trikafta')">⟳ Load New</button>
+      <button class="archive-btn" onclick="toggleArchive('trikafta')">📁 Archive</button>
+    </div>
   </div>
+  <div class="teaching-banner" id="teach-trikafta"></div>
   <div class="archive-panel" id="archive-trikafta" style="display:none;"></div>
   <div class="art-grid" id="grid-trikafta"></div>
+  <div class="daily-articles" id="daily-trikafta"></div>
 </div>
 
 <!-- AIRWAY -->
 <div id="sec-airway" class="sec">
   <div class="sec-hdr">
-    <div><div class="sec-title">Airway Clearance — Science &amp; Best Practices</div><div class="sec-sub">PEP devices · Physiology · Techniques · Best-practice protocols · Exercise integration</div></div>
-    <button class="archive-btn" onclick="toggleArchive('airway')">📁 Archive</button>
+    <div>
+      <div class="sec-title">Airway Clearance — Science &amp; Best Practices</div>
+      <div class="sec-sub">PEP devices · Physiology · Techniques · Best-practice protocols</div>
+    </div>
+    <div class="hdr-btns">
+      <button class="refresh-btn" onclick="loadDailyArticles('airway')">⟳ Load New</button>
+      <button class="archive-btn" onclick="toggleArchive('airway')">📁 Archive</button>
+    </div>
   </div>
+  <div class="teaching-banner" id="teach-airway"></div>
   <div class="chips">
     <div class="chip on" onclick="acFilter(this,'all')">All</div>
     <div class="chip" onclick="acFilter(this,'bp')">Best Practices</div>
     <div class="chip" onclick="acFilter(this,'pep')">PEP Devices</div>
     <div class="chip" onclick="acFilter(this,'physiol')">Physiology</div>
     <div class="chip" onclick="acFilter(this,'tech')">Techniques</div>
-    <div class="chip" onclick="acFilter(this,'exercise')">Exercise &amp; AC</div>
     <div class="chip" onclick="acFilter(this,'sequencing')">Sequencing</div>
   </div>
   <div class="bp-panel" id="ac-bp-panel">
@@ -86,16 +109,47 @@
   </div>
   <div class="archive-panel" id="archive-airway" style="display:none;"></div>
   <div class="art-grid" id="grid-airway"></div>
+  <div class="daily-articles" id="daily-airway"></div>
+</div>
+
+<!-- NACFC -->
+<div id="sec-nacfc" class="sec">
+  <div class="sec-hdr">
+    <div>
+      <div class="sec-title">🎓 NACFC — North American CF Conference</div>
+      <div class="sec-sub">Conference abstracts, presentations, and YouTube lecture recordings from NACFC</div>
+    </div>
+    <div class="hdr-btns">
+      <button class="refresh-btn" onclick="loadNACFC()">⟳ Refresh</button>
+    </div>
+  </div>
+  <div class="chips" id="nacfc-chips">
+    <div class="chip on" onclick="nacfcFilter(this,'all')">All Years</div>
+    <div class="chip" onclick="nacfcFilter(this,'2024')">2024</div>
+    <div class="chip" onclick="nacfcFilter(this,'2023')">2023</div>
+    <div class="chip" onclick="nacfcFilter(this,'2022')">2022</div>
+    <div class="chip" onclick="nacfcFilter(this,'abstract')">Abstracts</div>
+    <div class="chip" onclick="nacfcFilter(this,'video')">📹 Videos</div>
+    <div class="chip" onclick="nacfcFilter(this,'keynote')">Keynotes</div>
+  </div>
+  <div id="nacfc-grid" class="nacfc-grid"></div>
 </div>
 
 <!-- PHYSIOTHERAPY -->
 <div id="sec-pt" class="sec">
   <div class="sec-hdr">
-    <div><div class="sec-title">Physiotherapy — Full Scope of Practice</div><div class="sec-sub">Evidence across all physiotherapy domains: cardiorespiratory, neurological, paediatric, oncology, pelvic health, geriatric, mental health &amp; more</div></div>
-    <button class="archive-btn" onclick="toggleArchive('pt')">📁 Archive</button>
+    <div>
+      <div class="sec-title">Physiotherapy — Full Scope of Practice</div>
+      <div class="sec-sub">Cardiorespiratory · Neurological · Paediatric · Oncology · Pelvic Health · Geriatric · Mental Health</div>
+    </div>
+    <div class="hdr-btns">
+      <button class="refresh-btn" onclick="loadDailyArticles('pt')">⟳ Load New</button>
+      <button class="archive-btn" onclick="toggleArchive('pt')">📁 Archive</button>
+    </div>
   </div>
+  <div class="teaching-banner" id="teach-pt"></div>
   <div class="chips">
-    <div class="chip on" onclick="filterChip(this,'pt','all')">All domains</div>
+    <div class="chip on" onclick="filterChip(this,'pt','all')">All</div>
     <div class="chip" onclick="filterChip(this,'pt','cardiorespiratory')">Cardiorespiratory</div>
     <div class="chip" onclick="filterChip(this,'pt','neuro')">Neurological</div>
     <div class="chip" onclick="filterChip(this,'pt','paediatric')">Paediatric</div>
@@ -103,21 +157,24 @@
     <div class="chip" onclick="filterChip(this,'pt','pelvic')">Pelvic Health</div>
     <div class="chip" onclick="filterChip(this,'pt','geri')">Geriatric</div>
     <div class="chip" onclick="filterChip(this,'pt','mental')">Mental Health</div>
-    <div class="chip" onclick="filterChip(this,'pt','tele')">Telehealth</div>
-    <div class="chip" onclick="filterChip(this,'pt','global')">Global Health</div>
   </div>
   <div class="archive-panel" id="archive-pt" style="display:none;"></div>
   <div class="art-grid" id="grid-pt"></div>
+  <div class="daily-articles" id="daily-pt"></div>
 </div>
 
 <!-- MSK -->
 <div id="sec-msk" class="sec">
   <div class="sec-hdr">
-    <div><div class="sec-title">MSK &amp; Rehabilitation — Grow Your Skills</div><div class="sec-sub">Daily clinical pearls · Joint-by-joint guide · Return-to-sport criteria · Modalities · Assessment tools · Best-practice research</div></div>
+    <div>
+      <div class="sec-title">MSK &amp; Rehabilitation — Grow Your Skills</div>
+      <div class="sec-sub">Daily clinical pearls · Joint-by-joint guide · RTS criteria · Modalities · Assessment</div>
+    </div>
+    <div class="hdr-btns">
+      <button class="refresh-btn" onclick="loadDailyArticles('msk')">⟳ Load New</button>
+    </div>
   </div>
-
   <div class="pearl-card" id="daily-pearl"></div>
-
   <div class="chips" id="msk-chips">
     <div class="chip on" onclick="mskFilter(this,'all')">All</div>
     <div class="chip" onclick="mskFilter(this,'pearls')">💡 Daily Pearls</div>
@@ -127,64 +184,42 @@
     <div class="chip" onclick="mskFilter(this,'assess')">📋 Assessment</div>
     <div class="chip" onclick="mskFilter(this,'research')">📄 Research</div>
   </div>
-
-  <div id="msk-pearls-panel" class="msk-panel" style="display:none;">
-    <div class="subsec-title">Clinical Pearls — One New Concept Every Day</div>
-    <div class="pearls-grid" id="pearls-grid"></div>
-  </div>
-
-  <div id="msk-joint-panel" class="msk-panel" style="display:none;">
-    <div class="subsec-title">Joint-by-Joint Clinical Guide</div>
-    <div class="joint-nav" id="joint-nav"></div>
-    <div id="joint-content"></div>
-  </div>
-
-  <div id="msk-rts-panel" class="msk-panel">
-    <div class="subsec-title">Return-to-Sport Protocols</div>
-    <div class="protocol-grid" id="rts-grid"></div>
-  </div>
-
-  <div id="msk-modalities-panel" class="msk-panel" style="display:none;">
-    <div class="subsec-title">Evidence-Based Modalities</div>
-    <div class="ev-legend">Evidence: <span class="ev-pip ev-a">A</span> Strong RCT &nbsp;<span class="ev-pip ev-b">B</span> Good evidence &nbsp;<span class="ev-pip ev-c">C</span> Limited &nbsp;<span class="ev-pip ev-d">D</span> Expert opinion</div>
-    <div class="mod-grid" id="mod-grid"></div>
-  </div>
-
-  <div id="msk-assess-panel" class="msk-panel" style="display:none;">
-    <div class="subsec-title">Clinical Assessment &amp; Outcome Measures</div>
-    <div class="assess-grid" id="assess-grid"></div>
-  </div>
-
-  <div id="msk-research-panel" class="msk-panel" style="display:none;">
-    <div class="art-grid" id="grid-msk"></div>
-  </div>
+  <div id="msk-pearls-panel" class="msk-panel" style="display:none;"><div class="subsec-title">Clinical Pearls — One New Concept Every Day</div><div class="pearls-grid" id="pearls-grid"></div></div>
+  <div id="msk-joint-panel" class="msk-panel" style="display:none;"><div class="subsec-title">Joint-by-Joint Clinical Guide</div><div class="joint-nav" id="joint-nav"></div><div id="joint-content"></div></div>
+  <div id="msk-rts-panel" class="msk-panel"><div class="subsec-title">Return-to-Sport Protocols</div><div class="protocol-grid" id="rts-grid"></div></div>
+  <div id="msk-modalities-panel" class="msk-panel" style="display:none;"><div class="subsec-title">Evidence-Based Modalities</div><div class="ev-legend">Evidence: <span class="ev-pip ev-a">A</span> Strong RCT &nbsp;<span class="ev-pip ev-b">B</span> Good &nbsp;<span class="ev-pip ev-c">C</span> Limited &nbsp;<span class="ev-pip ev-d">D</span> Opinion</div><div class="mod-grid" id="mod-grid"></div></div>
+  <div id="msk-assess-panel" class="msk-panel" style="display:none;"><div class="subsec-title">Clinical Assessment &amp; Outcome Measures</div><div class="assess-grid" id="assess-grid"></div></div>
+  <div id="msk-research-panel" class="msk-panel" style="display:none;"><div class="art-grid" id="grid-msk"></div><div class="daily-articles" id="daily-msk"></div></div>
 </div>
 
 <!-- PAIN -->
 <div id="sec-pain" class="sec">
   <div class="sec-hdr">
-    <div><div class="sec-title">Chronic Pain &amp; CRPS</div><div class="sec-sub">Complex regional pain, central sensitisation, graded motor imagery, and multimodal rehabilitation</div></div>
-    <button class="archive-btn" onclick="toggleArchive('pain')">📁 Archive</button>
+    <div><div class="sec-title">Chronic Pain &amp; CRPS</div><div class="sec-sub">CRPS · Central sensitisation · GMI · Pain neuroscience · Pharmacological adjuncts</div></div>
+    <div class="hdr-btns"><button class="refresh-btn" onclick="loadDailyArticles('pain')">⟳ Load New</button><button class="archive-btn" onclick="toggleArchive('pain')">📁 Archive</button></div>
   </div>
+  <div class="teaching-banner" id="teach-pain"></div>
   <div class="chips">
     <div class="chip on" onclick="filterChip(this,'pain','all')">All</div>
     <div class="chip" onclick="filterChip(this,'pain','crps')">CRPS</div>
     <div class="chip" onclick="filterChip(this,'pain','central')">Central Sensitisation</div>
-    <div class="chip" onclick="filterChip(this,'pain','gmi')">GMI / Mirror Therapy</div>
+    <div class="chip" onclick="filterChip(this,'pain','gmi')">GMI / Mirror</div>
     <div class="chip" onclick="filterChip(this,'pain','pne')">Pain Neuroscience</div>
-    <div class="chip" onclick="filterChip(this,'pain','pharm')">Pharmacological</div>
   </div>
   <div class="archive-panel" id="archive-pain" style="display:none;"></div>
   <div class="art-grid" id="grid-pain"></div>
+  <div class="daily-articles" id="daily-pain"></div>
 </div>
 
 <!-- AUTONOMIC -->
 <div id="sec-auto" class="sec">
   <div class="sec-hdr">
-    <div><div class="sec-title">Autonomic Dysreflexia</div><div class="sec-sub">Pathophysiology, emergency management, SCI rehabilitation, and physiotherapy considerations</div></div>
-    <button class="archive-btn" onclick="toggleArchive('auto')">📁 Archive</button>
+    <div><div class="sec-title">Autonomic Dysreflexia</div><div class="sec-sub">Pathophysiology · Emergency management · SCI rehabilitation · Physiotherapy considerations</div></div>
+    <div class="hdr-btns"><button class="refresh-btn" onclick="loadDailyArticles('auto')">⟳ Load New</button><button class="archive-btn" onclick="toggleArchive('auto')">📁 Archive</button></div>
   </div>
+  <div class="teaching-banner" id="teach-auto"></div>
   <div class="art-grid" id="grid-auto"></div>
+  <div class="daily-articles" id="daily-auto"></div>
 </div>
 
 <!-- NEWS -->
@@ -192,21 +227,21 @@
   <div class="news-masthead">
     <div>
       <div class="news-masthead-title">World News Briefing</div>
-      <div class="news-masthead-sub">NYT · Washington Post · Reuters · Financial Times · FiveThirtyEight · The Athletic · CBC · BBC · The Economist · Toronto Star</div>
+      <div class="news-masthead-sub">NYT · Washington Post · Reuters · Financial Times · FiveThirtyEight · The Athletic · CBC · BBC · The Economist · Toronto Star · AP</div>
     </div>
     <button class="news-refresh" onclick="loadNews()">⟳ Refresh</button>
   </div>
   <div class="news-sources">
-    <div class="src-chip on"  onclick="filterNews(this,'all')">All</div>
-    <div class="src-chip"     onclick="filterNews(this,'politics')">🏛️ Politics</div>
-    <div class="src-chip"     onclick="filterNews(this,'world')">🌍 World</div>
-    <div class="src-chip"     onclick="filterNews(this,'business')">📈 Business/Finance</div>
-    <div class="src-chip"     onclick="filterNews(this,'health')">🏥 Health</div>
-    <div class="src-chip"     onclick="filterNews(this,'sports')">⚽ Sports</div>
-    <div class="src-chip"     onclick="filterNews(this,'canada')">🍁 Canada</div>
-    <div class="src-chip"     onclick="filterNews(this,'toronto')">🏙️ Toronto</div>
-    <div class="src-chip"     onclick="filterNews(this,'data')">📊 Data &amp; Analysis</div>
-    <div class="src-chip"     onclick="filterNews(this,'science')">🔬 Science &amp; Tech</div>
+    <div class="src-chip on" onclick="filterNews(this,'all')">All</div>
+    <div class="src-chip" onclick="filterNews(this,'politics')">🏛️ Politics</div>
+    <div class="src-chip" onclick="filterNews(this,'world')">🌍 World</div>
+    <div class="src-chip" onclick="filterNews(this,'business')">📈 Business</div>
+    <div class="src-chip" onclick="filterNews(this,'health')">🏥 Health</div>
+    <div class="src-chip" onclick="filterNews(this,'sports')">⚽ Sports</div>
+    <div class="src-chip" onclick="filterNews(this,'canada')">🍁 Canada</div>
+    <div class="src-chip" onclick="filterNews(this,'toronto')">🏙️ Toronto</div>
+    <div class="src-chip" onclick="filterNews(this,'data')">📊 Data</div>
+    <div class="src-chip" onclick="filterNews(this,'science')">🔬 Science</div>
   </div>
   <div id="news-container"><div class="loading-news">Click ⟳ Refresh to load today's world briefing…</div></div>
 </div>
@@ -214,8 +249,7 @@
 <!-- GAMES -->
 <div id="sec-games" class="sec">
   <div class="sec-title">Daily Brain Games</div>
-  <div class="sec-sub">New puzzles seeded daily — Sudoku (hard) · Wordle · Full Crossword (physio &amp; health edition)</div>
-
+  <div class="sec-sub">New puzzles every day — Sudoku (hard) · Wordle · General Crossword</div>
   <div class="games-row">
     <div class="game-card">
       <div class="game-hdr"><div class="game-hdr-title">Sudoku</div><div class="diff-badge d-hard">Hard</div></div>
@@ -231,7 +265,6 @@
         <div class="g-msg" id="sdk-msg"></div>
       </div>
     </div>
-
     <div class="game-card">
       <div class="game-hdr"><div class="game-hdr-title">Wordle</div><div class="diff-badge d-daily">Daily Word</div></div>
       <div class="wordle-wrap">
@@ -241,12 +274,11 @@
       </div>
     </div>
   </div>
-
   <div class="game-card" style="margin-top:16px;">
     <div class="game-hdr">
-      <div class="game-hdr-title">Daily Crossword — Physio &amp; Health Edition</div>
+      <div class="game-hdr-title">Daily Crossword</div>
       <div style="display:flex;gap:8px;align-items:center;">
-        <div class="diff-badge d-med">Medium</div>
+        <div class="diff-badge d-med">General Knowledge</div>
         <div id="cw-timer" style="font-size:12px;color:var(--muted);font-family:var(--sans);">0:00</div>
       </div>
     </div>
@@ -262,7 +294,7 @@
             <button class="g-btn" onclick="cwRevealAll()">Reveal All</button>
           </div>
           <div class="g-msg" id="cw-msg"></div>
-          <div class="cw-active-clue" id="cw-active-clue"></div>
+          <div class="cw-active-clue" id="cw-active-clue">Click a square to begin</div>
         </div>
         <div class="cw-right">
           <div class="clues-cols">
@@ -280,15 +312,16 @@
   <div class="sec-title" style="margin-bottom:14px;">Daily Research &amp; News Digest</div>
   <div class="email-card">
     <h3>Subscribe to your morning briefing</h3>
-    <p>Every morning: new high-impact research with AI clinical summaries, world news from NYT/WaPo/Reuters/FT/CBC/BBC/The Athletic, plus your daily Sudoku, Wordle, and Crossword — delivered to your inbox.</p>
+    <p>Every morning at 8 AM EST: new research with AI summaries, world news from NYT/WaPo/Reuters/FT, NACFC updates, plus Sudoku, Wordle, and Crossword. Previous days are always archived.</p>
     <div class="fgroup"><label>Email address</label><input type="email" id="sub-em" placeholder="you@example.com"/></div>
     <div class="fgroup"><label>Delivery time (Toronto/EST)</label>
       <select><option>6:00 AM</option><option>7:00 AM</option><option selected>8:00 AM</option><option>9:00 AM</option></select>
     </div>
     <div class="fgroup">
       <label>Research topics:</label>
-      <label class="cb-row"><input type="checkbox" checked> Cystic Fibrosis &amp; CFTR research</label>
-      <label class="cb-row"><input type="checkbox" checked> Airway clearance science &amp; PEP</label>
+      <label class="cb-row"><input type="checkbox" checked> Cystic Fibrosis &amp; CFTR</label>
+      <label class="cb-row"><input type="checkbox" checked> Airway clearance &amp; PEP</label>
+      <label class="cb-row"><input type="checkbox" checked> NACFC abstracts &amp; videos</label>
       <label class="cb-row"><input type="checkbox" checked> Physiotherapy (full scope)</label>
       <label class="cb-row"><input type="checkbox" checked> MSK, rehab &amp; return-to-sport</label>
       <label class="cb-row"><input type="checkbox"> Chronic pain &amp; CRPS</label>
@@ -297,25 +330,23 @@
     <div class="fgroup">
       <label>News sections:</label>
       <label class="cb-row"><input type="checkbox" checked> World news &amp; politics (NYT, WaPo, Reuters)</label>
-      <label class="cb-row"><input type="checkbox" checked> Business &amp; finance (FT, The Economist)</label>
+      <label class="cb-row"><input type="checkbox" checked> Business &amp; finance (FT, Economist)</label>
       <label class="cb-row"><input type="checkbox" checked> Canada &amp; Toronto (CBC, Toronto Star)</label>
-      <label class="cb-row"><input type="checkbox" checked> Health &amp; science (BBC, Reuters Health)</label>
-      <label class="cb-row"><input type="checkbox"> Data &amp; analysis (FiveThirtyEight)</label>
       <label class="cb-row"><input type="checkbox"> Sports (The Athletic)</label>
+      <label class="cb-row"><input type="checkbox"> Data &amp; analysis (FiveThirtyEight)</label>
     </div>
     <div class="fgroup">
       <label>Daily games:</label>
-      <label class="cb-row"><input type="checkbox" checked> Sudoku (hard) + hint</label>
-      <label class="cb-row"><input type="checkbox" checked> Wordle daily word hint</label>
+      <label class="cb-row"><input type="checkbox" checked> Sudoku + hint</label>
+      <label class="cb-row"><input type="checkbox" checked> Wordle hint</label>
       <label class="cb-row"><input type="checkbox" checked> Crossword clues</label>
     </div>
     <button class="submit-btn" onclick="doSubscribe()">Subscribe — free</button>
-    <div class="success-msg" id="sub-ok">✓ Subscribed! Your first digest arrives tomorrow morning at 8:00 AM EST.</div>
+    <div class="success-msg" id="sub-ok">✓ Subscribed! First digest arrives tomorrow at 8:00 AM EST.</div>
   </div>
 </div>
 
 </div><!-- /main -->
-
 <script src="data.js"></script>
 <script src="crossword.js"></script>
 <script src="app.js"></script>
