@@ -1,85 +1,109 @@
-# Deploy Guide — CF & Physio Research Hub
-# Auto-updates every day at 6:00 AM Toronto time
+# Deploy to Railway — Step by Step
+# Your site will auto-update every day at 6:00 AM Toronto time
 
-## STEP 1 — Upload files to GitHub (one time)
+## PART 1: Upload files to GitHub
 
-Open Terminal (Mac) or Command Prompt (Windows):
+Open Terminal (Mac: Cmd+Space → type Terminal) or Command Prompt (Windows):
 
 ```bash
+# Navigate to the folder you downloaded
 cd ~/Downloads/physioandnews
+
+# Set up git
 git init
 git checkout -b main
 git add .
-git commit -m "v3 full build"
+git commit -m "v4 build"
+
+# Push to your GitHub repo
+# Replace YOUR_TOKEN with a token from https://github.com/settings/tokens
+# When creating token: check the "repo" checkbox → Generate → Copy
 git remote add origin https://YOUR_TOKEN@github.com/kmwood45-ctrl/physioandnews.git
 git push -f origin main
 ```
 
-Generate a fresh token at: https://github.com/settings/tokens
-(check the "repo" checkbox)
+---
+
+## PART 2: Deploy on Railway (the server that runs daily at 6 AM)
+
+1. Go to https://railway.app
+2. Click "Start a New Project" → Sign up/in with GitHub
+3. Click "Deploy from GitHub repo"
+4. Select "physioandnews" from your repository list
+5. Railway will detect package.json and run npm install + npm start automatically
+
+### Add your Anthropic API key (REQUIRED for news + AI summaries):
+
+6. In Railway, click your project → click the service → click "Variables" tab
+7. Click "New Variable" and add:
+   - Name: `ANTHROPIC_API_KEY`
+   - Value: your key from https://console.anthropic.com (starts with sk-ant-)
+8. Click "Add" → Railway will redeploy automatically
+
+### Verify it's working:
+
+9. Click "Settings" tab → find your Railway URL (e.g. https://yourapp.railway.app)
+10. Visit: https://yourapp.railway.app/health
+    You should see: {"status":"ok","todayDataExists":true,...}
 
 ---
 
-## STEP 2 — Deploy backend on Railway (free — auto-refreshes daily)
+## PART 3: Enable GitHub Pages (free public website)
 
-Railway hosts your Node.js server that runs the 6 AM cron job.
-
-1. Go to https://railway.app → sign up with GitHub
-2. Click "New Project" → "Deploy from GitHub repo"
-3. Select "physioandnews"
-4. Add environment variables (Settings → Variables):
-
-```
-ANTHROPIC_API_KEY = sk-ant-your-key-here
-PORT = 3000
-```
-
-5. Railway auto-deploys. Your server URL will be something like:
-   https://physioandnews-production.up.railway.app
-
-6. Visit /health to confirm it's running:
-   https://yourapp.railway.app/health
+1. Go to github.com/kmwood45-ctrl/physioandnews
+2. Click "Settings" → "Pages" (left sidebar)
+3. Under "Branch": select "main" → click "Save"
+4. Wait 2 minutes → your site is live at:
+   https://kmwood45-ctrl.github.io/physioandnews
 
 ---
 
-## STEP 3 — Enable GitHub Pages (static fallback + free hosting)
+## How the daily refresh works
 
-1. github.com/kmwood45-ctrl/physioandnews
-2. Settings → Pages → Branch: main → Save
-3. Static site at: https://kmwood45-ctrl.github.io/physioandnews
+Every day at 6:00 AM Toronto time, Railway automatically:
+1. Searches PubMed for new research articles (FREE — no key needed)
+2. Generates AI clinical summaries via your Anthropic API key
+3. Fetches today's world news from NYT, WaPo, Reuters, BBC, CBC etc.
+4. Saves results to a dated file (e.g. 2026-04-13.json)
+5. Archives the previous 30 days automatically
 
-Note: GitHub Pages serves the static site. 
-      Railway serves the backend with daily auto-update.
-      The frontend fetches /api/today from Railway for fresh content.
-
----
-
-## How the daily update works
-
-Every day at 6:00 AM Toronto time, the Railway server:
-1. Queries PubMed API for new research in each category (free, no key needed)
-2. Generates AI clinical summaries via Anthropic API
-3. Fetches world news via Claude web search
-4. Saves result to /public/data/YYYY-MM-DD.json
-5. Archives files older than 30 days
-6. Frontend fetches /api/today on page load → displays fresh content
-
----
-
-## Get your Anthropic API key
-
-1. Go to https://console.anthropic.com
-2. Create account → API Keys → Create key
-3. Copy the key (starts with sk-ant-)
-4. Add to Railway environment variables
+The website fetches /api/today when you load it → always shows fresh content.
 
 ---
 
 ## Costs
 
-- Railway: Free tier = 500 hours/month (enough for 1 app running 24/7)
-- Anthropic API: ~$0.01–0.05 per daily update (very cheap)
-- GitHub Pages: Free
-- PubMed API: Completely free, no key needed
+| Service         | Cost         |
+|----------------|--------------|
+| Railway.app    | Free (500 hrs/month hobby plan) |
+| Anthropic API  | ~$0.01–0.05/day |
+| GitHub Pages   | Free |
+| PubMed API     | Free (no key needed) |
 
-Total cost: ~$0–2/month
+Total: essentially free
+
+---
+
+## Troubleshooting
+
+**"Application failed to respond"**
+→ Check Railway logs → Settings → Logs tab
+→ Make sure ANTHROPIC_API_KEY variable is set
+
+**"Cannot find module 'express'"**
+→ Railway needs to run npm install first
+→ In Railway: Settings → Deploy → make sure "Install Command" is set to `npm install`
+
+**Site not updating**
+→ Visit https://yourapp.railway.app/health to check server status
+→ Visit https://yourapp.railway.app/api/today to see today's data
+→ To manually trigger an update: POST to https://yourapp.railway.app/api/refresh
+
+**To update files in future:**
+```bash
+cd ~/Downloads/physioandnews
+git add .
+git commit -m "update"
+git push origin main
+# Railway auto-redeploys within 1-2 minutes
+```
