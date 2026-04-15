@@ -1,11 +1,10 @@
 {
   "name": "physio-research-hub",
-  "version": "4.0.0",
-  "description": "CF & Physio Research Hub — daily auto-updating",
-  "main": "server/index.js",
+  "version": "4.1.0",
+  "description": "CF & Physio Research Hub",
+  "main": "server.js",
   "scripts": {
-    "start": "node server/index.js",
-    "build": "echo 'No build step required'"
+    "start": "node server.js"
   },
   "dependencies": {
     "express": "4.18.2",
